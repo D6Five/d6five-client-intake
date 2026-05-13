@@ -352,13 +352,20 @@ function tick(){
   const n=['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'].filter(k=>ans(k)).length;
   document.getElementById('prog-fill').style.width=(n/10*100)+'%';
 }
+function sendHeight(){
+  var h = document.documentElement.scrollHeight;
+  window.parent.postMessage({iframeHeight: h}, '*');
+}
 function goPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page'+n).classList.add('active');
   window.scrollTo({top:0, behavior:'smooth'});
+  window.parent.postMessage({scrollToTop: true}, '*');
   const pcts=['','33%','66%','100%','100%'];
   document.getElementById('prog-fill').style.width = pcts[n];
+  setTimeout(sendHeight, 50);
 }
+window.addEventListener('load', function(){ setTimeout(sendHeight, 100); });
 function buildPayload(){
   const cv = k => (C[k]||[]).join(', ');
   const val = k => (O[k]||'').trim();
